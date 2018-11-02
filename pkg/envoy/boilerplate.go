@@ -193,6 +193,9 @@ func makeCluster(host, ca, healthPath string, timeout time.Duration, addresses [
 	} else {
 		tls = nil
 	}
+	fiveSeconds, _ := time.ParseDuration("5s")
+	tenSeconds, _ := time.ParseDuration("10s")
+
 	cluster := &v2.Cluster{
 		Type:           v2.Cluster_STRICT_DNS,
 		Name:           host,
@@ -200,8 +203,8 @@ func makeCluster(host, ca, healthPath string, timeout time.Duration, addresses [
 		Hosts:          addresses,
 		TlsContext:     tls,
 		HealthChecks: []*core.HealthCheck{&core.HealthCheck{
-			Timeout:            &types.Duration{Seconds: 5},
-			Interval:           &types.Duration{Seconds: 10},
+			Timeout:            &fiveSeconds,
+			Interval:           &tenSeconds,
 			UnhealthyThreshold: &types.UInt32Value{Value: 3},
 			HealthyThreshold:   &types.UInt32Value{Value: 3},
 			HealthChecker: &core.HealthCheck_HttpHealthCheck_{
